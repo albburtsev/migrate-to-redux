@@ -1,13 +1,14 @@
 .page-entry
-    flex_vertical_center()
-    background_dark_primary()
-    min-height: 100%
+    position: absolute
+    top: 50%
+    left: 0
+    right: 0
+    transform: translateY(-50%)
     text-align: center
 
     &__title
-        font_size_display()
-        color_text_primary()
+        margin: 0 0 2rem
 
-    &__addition
-        font_size_regular()
-        color_light_primary()
+    &__button
+        min-width: 8rem
+        margin: 0 .5rem

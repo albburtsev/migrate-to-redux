@@ -123,16 +123,9 @@ module.exports = {
                 loaders: ['style', 'css']
             },
             {
-                test: /\.png$/,
+                test: /\.(eot|woff|woff2|ttf|svg|png)(\?\w+)?$/,
                 loader: 'file'
             }
-        ]
-    },
-    stylus: {
-        import: [
-            '~styl/flexbox.styl',
-            '~styl/palette.styl',
-            '~styl/typography.styl'
         ]
     },
     plugins: plugins,
