@@ -57,6 +57,15 @@ app.use(devMiddleware(compiler, {
 
 app.use(hotMiddleware(compiler));
 
+// Fake REST API
+app.post('/api/signin', function(req, res) {
+    res.send(JSON.stringify({result: true}));
+});
+
+app.post('/api/signup', function(req, res) {
+    res.send(JSON.stringify({result: true}));
+});
+
 app.get('*', function(req, res) {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
