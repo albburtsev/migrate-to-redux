@@ -25,11 +25,11 @@ const L10N_BACK_LINK_TEXT = 'Back to entry';
 /**
  * PageSignPure component
  */
-const PageSignPure = ({type, login, password, onChange}) =>
+const PageSignPure = ({type, login, password, onChange, onSubmit}) =>
     <div className={b}>
         <Well className={b('well')()}>
             <h3 className={b('title')()}>{L10N_TITLE[type]}</h3>
-            <form>
+            <form onSubmit={onSubmit.bind(null, login, password)}>
                 <FormGroup>
                     <FormControl autoFocus
                         type="email" name="login" placeholder="Enter email" value={login}
@@ -57,7 +57,13 @@ PageSignPure.propTypes = {
     type: PropTypes.string.isRequired,
     login: PropTypes.string.isRequired,
     password: PropTypes.string.isRequired,
-    onChange: PropTypes.func.isRequired
+    request: PropTypes.shape({
+        isLoading: PropTypes.bool.isRequired,
+        isSuccess: PropTypes.bool.isRequired,
+        errors: PropTypes.object
+    }).isRequired,
+    onChange: PropTypes.func.isRequired,
+    onSubmit: PropTypes.func.isRequired
 };
 
 export default PageSignPure;

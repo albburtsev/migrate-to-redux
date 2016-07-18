@@ -6,8 +6,8 @@ const requestSchema = {
 
 export default {
     user: {
-        requestSignin: requestSchema,
-        requestSignup: requestSchema
+        requestSignin: {...requestSchema},
+        requestSignup: {...requestSchema}
     },
     forms: {
         signin: {
