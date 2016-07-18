@@ -11,10 +11,11 @@ import {Provider} from 'react-redux';
 import ReactDOM from 'react/lib/ReactDOM';
 import Root from 'components/Root/Root.jsx';
 import PageEntry from 'components/PageEntry/PageEntry.jsx';
-import {PageSignin, PageSignup} from 'components/PageSign/PageSign.jsx';
+import PageSignin from 'components/PageSign/PageSignin.jsx';
+import PageSignup from 'components/PageSign/PageSignup.jsx';
 
 let rootElement = document.querySelector('.app'),
-    basePath = global.basePath || '/',
+    basePath = global.basePath || paths.PATH_ENTRY,
     history = createHistory();
 
 ReactDOM.render((

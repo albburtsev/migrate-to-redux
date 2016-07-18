@@ -23,18 +23,24 @@ const L10N_LINK_TEXT = {
 const L10N_BACK_LINK_TEXT = 'Back to entry';
 
 /**
- * PageSign component
+ * PageSignPure component
  */
-const PageSign = ({type}) =>
+const PageSignPure = ({type, login, password, onChange}) =>
     <div className={b}>
         <Well className={b('well')()}>
             <h3 className={b('title')()}>{L10N_TITLE[type]}</h3>
             <form>
                 <FormGroup>
-                    <FormControl autoFocus type="email" placeholder="Enter email" />
+                    <FormControl autoFocus
+                        type="email" name="login" placeholder="Enter email" value={login}
+                        onChange={onChange.bind(null, 'login')}
+                    />
                 </FormGroup>
                 <FormGroup>
-                    <FormControl type="password" placeholder="Enter password" />
+                    <FormControl
+                        type="password" name="password" placeholder="Enter password" value={password}
+                        onChange={onChange.bind(null, 'password')}
+                    />
                 </FormGroup>
                 <FormGroup>
                     <Button type="submit" bsStyle="primary">Submit</Button>
@@ -47,20 +53,11 @@ const PageSign = ({type}) =>
     </div>
 ;
 
-PageSign.propTypes = {
-    type: PropTypes.string.isRequired
+PageSignPure.propTypes = {
+    type: PropTypes.string.isRequired,
+    login: PropTypes.string.isRequired,
+    password: PropTypes.string.isRequired,
+    onChange: PropTypes.func.isRequired
 };
 
-/**
- * PageSignin component
- */
-export const PageSignin = () =>
-    <PageSign type={PATH_SIGNIN} />
-;
-
-/**
- * PageSignup component
- */
-export const PageSignup = () =>
-    <PageSign type={PATH_SIGNUP} />
-;
+export default PageSignPure;
