@@ -18,8 +18,8 @@ export default connect(
             dispatch(formsActions.updateValue(`signin.${name}`, value));
         },
         onSubmit(login, password, e) {
-            e.preventDefault();
             dispatch(userActions.requestSigninSend(login, password));
+            e.preventDefault();
         }
     })
 )(PageSignPure);

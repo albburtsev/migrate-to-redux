@@ -25,25 +25,27 @@ const L10N_BACK_LINK_TEXT = 'Back to entry';
 /**
  * PageSignPure component
  */
-const PageSignPure = ({type, login, password, onChange, onSubmit}) =>
+const PageSignPure = ({type, login, password, request: {isLoading}, onChange, onSubmit}) =>
     <div className={b}>
         <Well className={b('well')()}>
             <h3 className={b('title')()}>{L10N_TITLE[type]}</h3>
             <form onSubmit={onSubmit.bind(null, login, password)}>
                 <FormGroup>
                     <FormControl autoFocus
-                        type="email" name="login" placeholder="Enter email" value={login}
+                        type="email" name="login" placeholder="Enter email" value={login} disabled={isLoading}
                         onChange={onChange.bind(null, 'login')}
                     />
                 </FormGroup>
                 <FormGroup>
                     <FormControl
-                        type="password" name="password" placeholder="Enter password" value={password}
+                        type="password" name="password" placeholder="Enter password" value={password} disabled={isLoading}
                         onChange={onChange.bind(null, 'password')}
                     />
                 </FormGroup>
                 <FormGroup>
-                    <Button type="submit" bsStyle="primary">Submit</Button>
+                    <Button type="submit" disabled={isLoading} bsStyle="primary">
+                        {isLoading ? 'Loading...' : 'Submit'}
+                    </Button>
                 </FormGroup>
                 <Link to={type === PATH_SIGNUP ? PATH_SIGNIN : PATH_SIGNUP}>{L10N_LINK_TEXT[type]}</Link>
                 <br />

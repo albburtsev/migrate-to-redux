@@ -48,7 +48,7 @@
         "block-scoped-var": 2,
         "consistent-return": 1,
         "curly": 2,
-        "default-case": 2,
+        "default-case": 0,
         "dot-notation": 1,
         "dot-location": 0,
         "eqeqeq": 2,
