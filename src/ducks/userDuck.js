@@ -8,30 +8,51 @@ const SIGNIN_REQEUST_SEND = 'SIGNIN_REQEUST_SEND';
 const SIGNIN_REQEUST_RECEIVE = 'SIGNIN_REQEUST_RECEIVE';
 const SIGNIN_REQEUST_FAIL = 'SIGNIN_REQEUST_FAIL';
 
-export const requestSigninFail = (errors) =>
-    ({type: SIGNIN_REQEUST_FAIL, payload: {errors}});
+export const makeRequestActionCreators = ({
+    types: [sendType, receiveType, errorType],
+    endpoint
+}) => ({
+    send: (...args) =>
+        (dispatch) => {
+            dispatch({type: sendType});
+            return endpoint(...args)
+                .then((json) => {
+                    let {errors} = json;
 
-export const requestSigninReceive = (json) =>
-    ({type: SIGNIN_REQEUST_RECEIVE, payload: {json}});
+                    if (errors) {
+                        dispatch({type: errorType, payload: {errors}});
+                    } else {
+                        dispatch({type: receiveType, payload: {json}});
+                    }
+                })
+                .catch((errors) => {
+                    dispatch({type: errorType, payload: {errors}});
+                });
+        },
 
-export const requestSigninSend = (data) =>
-    (dispatch) => {
-        dispatch({type: SIGNIN_REQEUST_SEND, payload: {data}});
+    receive: (json) =>
+        ({type: receiveType, payload: {json}}),
 
-        return rest.post('signin', data)
-            .then((json) => {
-                let {errors} = json;
+    fail: (errors) =>
+        ({type: errorType, payload: {errors}})
+});
 
-                if (errors) {
-                    dispatch(requestSigninFail(errors));
-                } else {
-                    dispatch(requestSigninReceive(json));
-                }
-            })
-            .catch((errors) => {
-                dispatch(requestSigninFail(errors));
-            });
-    };
+let {
+    send: requestSigninSend,
+    receive: requestSigninReceive,
+    fail: requestSigninFail
+} = makeRequestActionCreators({
+    types: [SIGNIN_REQEUST_SEND, SIGNIN_REQEUST_RECEIVE, SIGNIN_REQEUST_FAIL],
+    endpoint: (data) =>
+        rest.post('signin', data)
+});
+
+export {
+    requestSigninSend,
+    requestSigninReceive,
+    requestSigninFail
+};
+
 
 const requestState = (changes = {}) =>
     Object.assign({}, {
