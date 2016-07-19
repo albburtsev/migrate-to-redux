@@ -59,7 +59,10 @@ app.use(hotMiddleware(compiler));
 
 // Fake REST API
 app.post('/api/signin', function(req, res) {
-    res.send(JSON.stringify({result: true}));
+    // Intentionally delayed response
+    setTimeout(function() {
+        res.send(JSON.stringify({result: true}));
+    }, 1000);
 });
 
 app.post('/api/signup', function(req, res) {
