@@ -1,48 +1,20 @@
 import schema from 'reducers/schema';
 import FetchPlease from 'fetch-please';
 import immutable from 'seamless-immutable';
+import createRequestDuck from 'ducks/helpers/createRequestDuck';
+
+const FILTER_USER_SIGNIN = 'FILTER_USER_SIGNIN';
+const FILTER_USER_SIGNUP = 'FILTER_USER_SIGNUP';
 
 let rest = new FetchPlease('/api/');
-
-const SIGNIN_REQEUST_SEND = 'SIGNIN_REQEUST_SEND';
-const SIGNIN_REQEUST_RECEIVE = 'SIGNIN_REQEUST_RECEIVE';
-const SIGNIN_REQEUST_FAIL = 'SIGNIN_REQEUST_FAIL';
-
-export const makeRequestActionCreators = ({
-    types: [sendType, receiveType, errorType],
-    endpoint
-}) => ({
-    send: (...args) =>
-        (dispatch) => {
-            dispatch({type: sendType});
-            return endpoint(...args)
-                .then((json) => {
-                    let {errors} = json;
-
-                    if (errors) {
-                        dispatch({type: errorType, payload: {errors}});
-                    } else {
-                        dispatch({type: receiveType, payload: {json}});
-                    }
-                })
-                .catch((errors) => {
-                    dispatch({type: errorType, payload: {errors}});
-                });
-        },
-
-    receive: (json) =>
-        ({type: receiveType, payload: {json}}),
-
-    fail: (errors) =>
-        ({type: errorType, payload: {errors}})
-});
 
 let {
     send: requestSigninSend,
     receive: requestSigninReceive,
-    fail: requestSigninFail
-} = makeRequestActionCreators({
-    types: [SIGNIN_REQEUST_SEND, SIGNIN_REQEUST_RECEIVE, SIGNIN_REQEUST_FAIL],
+    fail: requestSigninFail,
+    reducer: signinReducer
+} = createRequestDuck({
+    filter: FILTER_USER_SIGNIN,
     endpoint: (data) =>
         rest.post('signin', data)
 });
@@ -53,24 +25,29 @@ export {
     requestSigninFail
 };
 
+let {
+    send: requestSignupSend,
+    receive: requestSignupReceive,
+    fail: requestSignupFail,
+    reducer: signupReducer
+} = createRequestDuck({
+    filter: FILTER_USER_SIGNUP,
+    endpoint: (data) =>
+        rest.post('signup', data)
+});
 
-const requestState = (changes = {}) =>
-    Object.assign({}, {
-        isLoading: false,
-        isSuccess: false,
-        errors: null
-    }, changes);
+export {
+    requestSignupSend,
+    requestSignupReceive,
+    requestSignupFail
+};
 
 export default (state = immutable(schema.user), action) => {
-    switch (action.type) {
-        case SIGNIN_REQEUST_SEND:
-            return state.set('requestSignin', requestState({isLoading: true}));
-
-        case SIGNIN_REQEUST_RECEIVE:
-            return state.set('requestSignin', requestState({isSuccess: true}));
-
-        case SIGNIN_REQEUST_FAIL:
-            return state.set('requestSignin', requestState({errors: action.payload.errors}));
+    switch (action.filter) {
+        case FILTER_USER_SIGNIN:
+            return state.set('requestSignin', signinReducer(state.requestSignin, action));
+        case FILTER_USER_SIGNUP:
+            return state.set('requestSignup', signupReducer(state.requestSignin, action));
     }
 
     return state;
